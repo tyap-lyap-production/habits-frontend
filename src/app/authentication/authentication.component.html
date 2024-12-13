@@ -1,0 +1,31 @@
+<div class="authorization-box">
+    <form [formGroup]="form" class="form">
+        <tui-input class="form__item" formControlName="email">
+            Почта
+            <input
+                tuiTextfield
+                type="email"
+            />
+        </tui-input>
+        <tui-error
+            formControlName="email"
+            [error]="[] | tuiFieldError | async"    
+        ></tui-error>
+
+        <tui-input-password class="form__item"  formControlName="password">
+            Пароль
+        </tui-input-password>
+        <tui-error
+            formControlName="password"
+            [error]="[] | tuiFieldError | async"    
+        ></tui-error>
+
+        <button
+            tuiButton
+            size="m"
+            (click)="signIn()"
+        >
+            Войти
+        </button>
+    </form>
+  </div>

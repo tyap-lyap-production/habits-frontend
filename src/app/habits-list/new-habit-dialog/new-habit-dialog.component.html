@@ -1,0 +1,61 @@
+<form class="form" [formGroup]="form">
+    <h1>Новая привычка</h1>
+    <tui-input class="form__item" formControlName="name">
+        Название
+    </tui-input>
+    <tui-error
+        formControlName="name"
+        [error]="[] | tuiFieldError | async"    
+    ></tui-error>
+
+    <tui-input-number class="form__item" formControlName="goalValue">
+        Цель
+    </tui-input-number>
+    <tui-error
+        formControlName="goalValue"
+        [error]="[] | tuiFieldError | async"    
+    ></tui-error>
+
+    <tui-input class="form__item" formControlName="unitType">
+        Измерение
+    </tui-input>
+    <tui-error
+        formControlName="unitType"
+        [error]="[] | tuiFieldError | async"    
+    ></tui-error>
+
+    <tui-select class="form__item"
+        formControlName="periodicity"
+        [valueContent]="periodicityValueContent"
+    >
+        Периодичность
+        <tui-data-list-wrapper
+            *tuiDataList
+            [items]="periodicityArr"
+            [itemContent]="periodicityValueContent"
+        ></tui-data-list-wrapper>
+    </tui-select>
+    <tui-error
+        formControlName="periodicity"
+        [error]="[] | tuiFieldError | async"    
+    ></tui-error>
+    <div>
+        <button
+            appearance="primary"
+            tuiButton
+            size="m"
+            (click)="ok()"
+        >Создать</button>
+
+        <button
+            appearance="secondary"
+            tuiButton
+            size="m"
+            (click)="cancel()"
+        >Отмена</button>
+    </div>
+</form>
+
+<ng-template #periodicityValueContent let-items>
+    {{items | habitPeriodicity}}
+</ng-template>

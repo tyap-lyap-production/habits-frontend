@@ -1,1 +1,54 @@
-<p>habits-list works!</p>
+<div class="tui-row tui-row_adaptive content-block">
+    <div class="header">
+        <h1>Привычки</h1>
+        <button
+            appearance="primary"
+            tuiIconButton
+            size="m"
+            icon="tuiIconPlusLarge"
+            (click)="addHabit()"
+        ></button>
+
+    </div>
+    <tui-accordion >
+        <tui-accordion-item *ngFor="let habit of (service.habits$ | async)">
+            <div class="accord-head">
+                <div>
+                    {{habit.name}}
+                    <tui-badge
+                        status="info"
+                        [value]="habit.goal.periodicity | habitPeriodicity"
+                    ></tui-badge>
+                    <tui-svg *ngIf="habit.status === 'completed'" src="tuiIconCheckLarge"></tui-svg>
+                </div>
+                <div>
+                    {{habit.goal.value}} {{habit.goal.unitType}}
+                </div>
+            </div>
+            <ng-template tuiAccordionItemContent>
+                <div class="accord-item-content">
+                    <button
+                        *ngIf="habit.status !== 'completed'"
+                        appearance="primary"
+                        tuiButton
+                        size="m"
+                    >Выполнить</button>
+                    <button
+                        *ngIf="habit.status === 'completed'"
+                        appearance="secondary"
+                        tuiButton
+                        size="m"
+                        [disabled]="true"
+                    >Выполнено</button>
+                    <button
+                        appearance="secondary"
+                        tuiIconButton
+                        size="m"
+                        icon="tuiIconTrash2Large"
+                        (click)="deleteHabit(habit.id)"
+                    ></button>
+                </div>
+            </ng-template>
+        </tui-accordion-item>
+    </tui-accordion>
+</div>
