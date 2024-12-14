@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 @Component({
@@ -6,13 +6,15 @@ import { Router } from "@angular/router";
     imports: [],
     template: '',
   })
-  export class IndexComponent {
-    constructor(readonly router: Router) {
-        if(window.localStorage.getItem('userId')) {
-            this.router.navigateByUrl('habits')
-            return;
-        }
+  export class IndexComponent implements OnInit {
+    constructor(readonly router: Router) {}
 
-        this.router.navigateByUrl('start')
+    ngOnInit(): void {
+      if(window.localStorage.getItem('userId')) {
+        this.router.navigateByUrl('habits')
+        return;
+    }
+
+    this.router.navigateByUrl('start')
     }
   }

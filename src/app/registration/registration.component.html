@@ -3,18 +3,6 @@
         class="form"
         [formGroup]="form"
     >
-        <tui-input class="form__item" formControlName="login">
-            Введите логин
-            <input
-                tuiTextfield
-                type="email"
-            />
-        </tui-input>
-        <tui-error
-            formControlName="login"
-            [error]="[] | tuiFieldError | async"    
-        ></tui-error>
-
         <tui-input class="form__item" formControlName="email">
             Введите свою почту
             <input

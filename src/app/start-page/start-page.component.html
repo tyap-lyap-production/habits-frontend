@@ -1,12 +1,21 @@
 <div class="authorization-box">
-    <p class="enter-text">Войти в Habits Tracker</p>
-    <a routerLink="/sign-in" routerLinkActive="active">
-      <button class="btn btn__enter">Войти</button>
-    </a>
-    <a routerLink="/sign-up" routerLinkActive="active">
-      <button class="btn btn__regist">Зарегистрироваться</button>
-    </a>
-    <div class="text-policy">
-      <p>Регистрируясь, вы соглашаетесь с Условиями предоставления услуг и Политикой конфиденциальности, включая использование cookie файлов</p>
-    </div>
+  <p class="enter-text">Войти в Habits Tracker</p>
+  <button
+    tuiLink
+    class="btn btn__enter"
+    (click)="onSignIn()"
+  >
+    Войти
+  </button>
+
+  <button
+    tuiLink
+    class="btn btn__regist"
+    (click)="onSignUp()"
+  >
+    Зарегистрироваться
+  </button>
+  <div class="text-policy">
+    <p>Регистрируясь, вы соглашаетесь с Условиями предоставления услуг и Политикой конфиденциальности, включая использование cookie файлов</p>
   </div>
+</div>

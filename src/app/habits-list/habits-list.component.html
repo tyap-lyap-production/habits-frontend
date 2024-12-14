@@ -2,15 +2,15 @@
     <div class="header">
         <h1>Привычки</h1>
         <button
+            id="add_btn"
             appearance="primary"
             tuiIconButton
             size="m"
             icon="tuiIconPlusLarge"
             (click)="addHabit()"
         ></button>
-
     </div>
-    <tui-accordion >
+    <tui-accordion>
         <tui-accordion-item *ngFor="let habit of (service.habits$ | async)">
             <div class="accord-head">
                 <div>
@@ -32,6 +32,8 @@
                         appearance="primary"
                         tuiButton
                         size="m"
+                        id="complete_btn"
+                        (click)="completeHabit(habit.id)"
                     >Выполнить</button>
                     <button
                         *ngIf="habit.status === 'completed'"
@@ -41,6 +43,7 @@
                         [disabled]="true"
                     >Выполнено</button>
                     <button
+                        id="delete_btn"
                         appearance="secondary"
                         tuiIconButton
                         size="m"

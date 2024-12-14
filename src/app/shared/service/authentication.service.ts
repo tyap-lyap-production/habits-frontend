@@ -3,7 +3,7 @@ import { ApiService } from "./api.service";
 import { catchError, EMPTY, take } from "rxjs";
 import { Router } from "@angular/router";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AuthenticationService {
     readonly apiService = inject(ApiService);
     readonly router = inject(Router);

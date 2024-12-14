@@ -23,16 +23,17 @@ import { HabitsListService } from '../habits-list.service';
     HabitPeriodicityPipe,
     TuiButtonModule
   ],
+  providers: [HabitsListService],
   templateUrl: './new-habit-dialog.component.html',
   styleUrl: './new-habit-dialog.component.less',
   standalone: true
 })
 export class NewHabitDialogComponent {
   readonly form = new FormGroup({
-    name: new FormControl(null, [Validators.required]),
-    goalValue: new FormControl(null, [Validators.required]),
-    unitType: new FormControl(null, [Validators.required]),
-    periodicity: new FormControl(null, [Validators.required]),
+    name: new FormControl('', [Validators.required]),
+    goalValue: new FormControl(0, [Validators.required]),
+    unitType: new FormControl('', [Validators.required]),
+    periodicity: new FormControl('', [Validators.required]),
   });
 
   readonly periodicityArr: HabitPeriodicity[] = [

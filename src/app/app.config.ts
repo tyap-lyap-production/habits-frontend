@@ -1,19 +1,21 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginGuard } from './guards/login.guard';
-import { AuthenticationService } from './shared/service/authentication.service';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
+import { TuiRootModule } from '@taiga-ui/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideAnimations(),
     provideRouter(routes),
-    provideAnimationsAsync(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideHttpClient(),
+    importProvidersFrom(TuiRootModule),
     AuthGuard,
     LoginGuard,
     Window,
-    AuthenticationService
   ]
 };

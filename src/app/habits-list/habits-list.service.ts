@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, catchError, EMPTY, take } from "rxjs";
-import { Habit, HabitPeriodicity} from "./habits-list.component";
+import { Habit, HabitPeriodicity, HabitStatus} from "./habits-list.component";
 import { ApiService } from "../shared/service/api.service";
 import { EMPTY_ARRAY } from "@taiga-ui/cdk";
 
@@ -12,9 +12,13 @@ export interface AddHabitForm {
   }
   
 
-@Injectable()
+@Injectable(
+    {
+        providedIn: 'root'
+    }
+)
 export class HabitsListService {
-    readonly habits$ = new BehaviorSubject<Habit[]>([]);
+    habits$ = new BehaviorSubject<Habit[]>([]);
     readonly apiService = inject(ApiService);
 
     loadHabits() {
@@ -34,7 +38,15 @@ export class HabitsListService {
             catchError(
                 _ => EMPTY
             )
-        ).subscribe()
+        ).subscribe(
+            value => () => 
+                this.habits$.next(
+                [...this.habits$.value, {
+                    id: value.id,
+                    ...data
+                }]
+            )
+        )
     }
 
     deleteHabit(habitId: string) {
@@ -48,6 +60,22 @@ export class HabitsListService {
                 this.habits$.next(
                 [...this.habits$.value.filter(
                     habit => habit.id !== habitId
+                )]
+            )
+        )
+    }
+
+    completeHabit(habitId: string) {
+        this.apiService.completedHabit(habitId).pipe(
+            take(1),
+            catchError(
+                _ => EMPTY
+            )
+        ).subscribe(
+            () => 
+                this.habits$.next(
+                [...this.habits$.value.map(
+                    habit => habit.id === habitId ? {...habit, status: HabitStatus.completed} : habit
                 )]
             )
         )

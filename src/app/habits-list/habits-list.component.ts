@@ -39,12 +39,11 @@ export interface Habit {
     TuiBadgeModule,
     TuiButtonModule,
     HabitPeriodicityPipe,
-    TuiSvgModule
+    TuiSvgModule,
   ],
   templateUrl: './habits-list.component.html',
   styleUrl: './habits-list.component.less',
   standalone: true,
-  providers: [HabitsListService]
 })
 export class HabitsListComponent implements OnInit{
   constructor(
@@ -68,7 +67,7 @@ export class HabitsListComponent implements OnInit{
     this.service.deleteHabit(habitId);
   }
 
-  completeHabit(){
-    
+  completeHabit(habitId: string){
+    this.service.completeHabit(habitId);
   }
 }

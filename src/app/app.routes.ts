@@ -32,5 +32,9 @@ export const routes: Routes = [
     {
         path: '',
         component: IndexComponent
+    },
+    {
+        path: '**',
+        redirectTo: ''
     }
 ];

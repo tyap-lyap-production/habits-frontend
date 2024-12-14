@@ -21,8 +21,8 @@ import { AuthenticationService } from '../shared/service/authentication.service'
 })
 export class AuthenticationComponent {
   readonly form = new FormGroup({
-    email: new FormControl(null, [Validators.required, Validators.email]),
-    password: new FormControl(null, Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', Validators.required),
   });
 
   constructor(readonly service: AuthenticationService) {}
@@ -31,6 +31,7 @@ export class AuthenticationComponent {
     if(this.form.valid){
       this.service.signIn(this.form.value);
     }
+
     this.form.markAllAsTouched();
   }
 }

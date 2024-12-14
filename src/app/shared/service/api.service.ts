@@ -1,86 +1,50 @@
-import { Injectable } from "@angular/core";
-import { Habit, HabitPeriodicity, HabitStatus } from "../../habits-list/habits-list.component";
-import { Observable, of } from "rxjs";
+import { inject, Injectable } from "@angular/core";
+import { Habit, HabitStatus } from "../../habits-list/habits-list.component";
+import { Observable, tap } from "rxjs";
 import { AddHabitForm } from "../../habits-list/habits-list.service";
-
-function habitsMock(): Habit[] {
-    return [
-        {
-          id: '123',
-          name: '1',
-          createDate: '11-11-1111',
-          goal: {
-            id: '123',
-            periodicity: HabitPeriodicity.daily,
-            value: 10,
-            unitType: 'min'
-          },
-          status: HabitStatus.in_progress,
-        },
-        {
-          id: '1234',
-          name: '2',
-          createDate: '11-11-1111',
-          goal: {
-            id: '123',
-            periodicity: HabitPeriodicity.daily,
-            value: 11,
-            unitType: 'km'
-          },
-          status: HabitStatus.completed,
-        },
-        {
-          id: '12334',
-          name: '3',
-          createDate: '11-11-1000',
-          goal: {
-            id: '123',
-            periodicity: HabitPeriodicity.weekly,
-            value: 11,
-            unitType: 'sec'
-          },
-          status: HabitStatus.in_progress,
-    
-        },
-        {
-          id: '12355',
-          name: '4',
-          createDate: '11-11-1111',
-          goal: {
-            id: '123',
-            periodicity: HabitPeriodicity.monthly,
-            value: 10,
-            unitType: 'km'
-          },
-          status: HabitStatus.completed,
-        },
-      ];
-} 
+import { HttpClient } from "@angular/common/http";
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class ApiService {
+  userId: number | null;
+  private readonly httpClient = inject(HttpClient);
+  private readonly api = 'http://127.0.0.1'
+
+  constructor() {
+      this.userId = Number(window.localStorage.getItem('userId'));
+  }
+
     loadHabits(): Observable<Habit[]> {
-        return of(habitsMock());
+      return this.httpClient.get<Habit[]>(`${this.api}/habits?user_id=${this.userId}`);
     }
 
-    addHabit(data: AddHabitForm): Observable<boolean> {
-        return of(true);
+    addHabit(data: AddHabitForm): Observable<{id: string}> {
+      return this.httpClient.post<{id: string}>(`${this.api}/habits`, data);
     }
 
-    deleteHabit(habitId: string): Observable<boolean> {
-        return of(true);
+    deleteHabit(habitId: string): Observable<void> {
+      return this.httpClient.delete<void>(`${this.api}/habits/${habitId}`);
     }
 
     signIn(data: any): Observable<string> {
-        return of('123');
-
+      return this.httpClient.post<string>(`${this.api}/user/login`, data).pipe(
+        tap(id => this.userId = +id)
+      );
     }
 
     signUp(data: any): Observable<string> {
-        return of('123');
+      return this.httpClient.post<string>(`${this.api}/user`, data).pipe(
+        tap(id => this.userId = +id)
+      );
+    }
+
+    completedHabit(habitId: string): Observable<any> {
+      return this.httpClient.put<{id: string}>(`${this.api}/habits/${habitId}`, {
+        status: HabitStatus.completed
+      });
     }
 
 }
