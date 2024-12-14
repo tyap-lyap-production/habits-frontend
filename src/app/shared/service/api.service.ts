@@ -106,7 +106,7 @@ export class ApiService {
 
     completedHabit(habitId: string): Observable<any> {
       return this.httpClient.put<{id: string}>(`${this.api}/habits/${habitId}`, {
-        status: HabitStatus.completed
+        status:0
       });
     }
 
