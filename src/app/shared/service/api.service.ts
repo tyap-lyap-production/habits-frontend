@@ -1,9 +1,22 @@
 import { inject, Injectable } from "@angular/core";
 import { Habit, HabitStatus } from "../../habits-list/habits-list.component";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { AddHabitForm } from "../../habits-list/habits-list.service";
 import { HttpClient } from "@angular/common/http";
 
+
+interface HabitsDto {
+  readonly id: string;
+  readonly name: string;
+  readonly createDate: string;
+  readonly goal: {
+    readonly id: string;
+    readonly unitType: string;
+    readonly periodicity: string;
+    readonly value: number;
+  };
+  readonly status: HabitStatus;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +31,12 @@ export class ApiService {
   }
 
     loadHabits(): Observable<Habit[]> {
-      return this.httpClient.get<Habit[]>(`${this.api}/habits?user_id=${this.userId}`);
+      return this.httpClient.get<HabitsDto[]>(`${this.api}/habits?user_id=${this.userId}`).pipe(
+        map(habits => habits.map(habit => ({
+          ...habit,
+          status: habit.status ? HabitStatus.in_progress : HabitStatus.completed,
+        } as Habit)))
+      );
     }
 
     addHabit(data: AddHabitForm): Observable<{id: string}> {
