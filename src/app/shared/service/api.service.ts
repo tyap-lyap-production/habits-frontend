@@ -1,21 +1,25 @@
 import { inject, Injectable } from "@angular/core";
-import { Habit, HabitStatus } from "../../habits-list/habits-list.component";
-import { map, Observable } from "rxjs";
+import { Habit, HabitPeriodicity, HabitStatus } from "../../habits-list/habits-list.component";
+import { map, Observable, of, tap } from "rxjs";
 import { AddHabitForm } from "../../habits-list/habits-list.service";
 import { HttpClient } from "@angular/common/http";
 
-
 interface HabitsDto {
-  readonly id: string;
-  readonly name: string;
-  readonly createDate: string;
   readonly goal: {
     readonly id: string;
-    readonly unitType: string;
+    readonly unit_type: string;
     readonly periodicity: string;
     readonly value: number;
   };
-  readonly status: HabitStatus;
+
+  readonly habit: {
+    readonly id: string;
+    readonly name: string;
+    readonly createDate: string;
+    readonly goal_id: string;
+    readonly status: HabitStatus;
+    readonly user_id: string;
+  }
 }
 
 interface HabitsDtoCreate {
@@ -27,6 +31,12 @@ interface HabitsDtoCreate {
     readonly value: number;
   };
   readonly status: number;
+}
+
+interface UserDto {
+  readonly user_id: string;
+  readonly email: string;
+  readonly password: string;
 }
 
 @Injectable({
@@ -44,8 +54,14 @@ export class ApiService {
     loadHabits(): Observable<Habit[]> {
       return this.httpClient.get<HabitsDto[]>(`${this.api}/habits?user_id=${this.userId}`).pipe(
         map(habits => habits.map(habit => ({
-          ...habit,
-          status: habit.status ? HabitStatus.in_progress : HabitStatus.completed,
+          name: habit.habit.name,
+          createDate: habit.habit.createDate,
+          goal: {
+            unitType: habit.goal.unit_type,
+            periodicity: habit.goal.periodicity as HabitPeriodicity,
+            value: habit.goal.value,
+          },
+          status: habit.habit.status ? HabitStatus.in_progress : HabitStatus.completed,
         } as Habit)))
       );
     }
@@ -76,11 +92,15 @@ export class ApiService {
     }
 
     signIn(data: any): Observable<string> {
-      return this.httpClient.post<string>(`${this.api}/user/login`, data);
+      return this.httpClient.post<UserDto>(`${this.api}/user/login`, data).pipe(
+        map(user => user.user_id)
+      );
     }
 
     signUp(data: any): Observable<string> {
-      return this.httpClient.post<string>(`${this.api}/user`, data);
+      return this.httpClient.post<UserDto>(`${this.api}/user`, data).pipe(
+        map(user => user.user_id)
+      );
     }
 
     completedHabit(habitId: string): Observable<any> {
