@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { Habit, HabitStatus } from "../../habits-list/habits-list.component";
-import { Observable, tap } from "rxjs";
+import { Observable } from "rxjs";
 import { AddHabitForm } from "../../habits-list/habits-list.service";
 import { HttpClient } from "@angular/common/http";
 
@@ -9,12 +9,12 @@ import { HttpClient } from "@angular/common/http";
     providedIn: 'root'
 })
 export class ApiService {
-  userId: number | null;
+  userId: string | null;
   private readonly httpClient = inject(HttpClient);
   private readonly api = 'http://127.0.0.1'
 
   constructor() {
-      this.userId = Number(window.localStorage.getItem('userId'));
+      this.userId = window.localStorage.getItem('userId');
   }
 
     loadHabits(): Observable<Habit[]> {
@@ -30,15 +30,11 @@ export class ApiService {
     }
 
     signIn(data: any): Observable<string> {
-      return this.httpClient.post<string>(`${this.api}/user/login`, data).pipe(
-        tap(id => this.userId = +id)
-      );
+      return this.httpClient.post<string>(`${this.api}/user/login`, data);
     }
 
     signUp(data: any): Observable<string> {
-      return this.httpClient.post<string>(`${this.api}/user`, data).pipe(
-        tap(id => this.userId = +id)
-      );
+      return this.httpClient.post<string>(`${this.api}/user`, data);
     }
 
     completedHabit(habitId: string): Observable<any> {
