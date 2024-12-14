@@ -62,7 +62,7 @@ export class ApiService {
             periodicity: habit.goal.periodicity as HabitPeriodicity,
             value: habit.goal.value,
           },
-          status: habit.habit.status ? HabitStatus.in_progress : HabitStatus.completed,
+          status: !habit.habit.status ? HabitStatus.in_progress : HabitStatus.completed,
         } as Habit)))
       );
     }
