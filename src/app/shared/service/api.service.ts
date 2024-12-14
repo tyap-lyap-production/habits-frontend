@@ -54,6 +54,7 @@ export class ApiService {
     loadHabits(): Observable<Habit[]> {
       return this.httpClient.get<HabitsDto[]>(`${this.api}/habits?user_id=${this.userId}`).pipe(
         map(habits => habits.map(habit => ({
+          id: habit.habit.id,
           name: habit.habit.name,
           createDate: habit.habit.createDate,
           goal: {
